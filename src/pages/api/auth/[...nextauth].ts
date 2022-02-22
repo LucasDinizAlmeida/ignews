@@ -17,7 +17,7 @@ export default NextAuth({
       const { email: userEmail } = user
 
       try {
-        fauna.query(
+        await fauna.query(
           q.If(
             q.Not(
               q.Exists(
