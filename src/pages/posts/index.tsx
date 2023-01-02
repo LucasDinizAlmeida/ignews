@@ -19,28 +19,28 @@ interface PostsProps {
 
 export default function Posts({ posts }: PostsProps) {
 
-  return(
+  return (
     <main className={styles.container}>
       <div className={styles.posts}>
         {
           posts.map(post => (
-            <Link href={`/posts/${post.slug}`}>
-              <a key={post.slug}>
+            <Link key={post.slug} href={`/posts/preview/${post.slug}`}>
+              <a>
                 <time>{post.updateAt}</time>
                 <h2>{post.title}</h2>
                 <p>{post.excerpt}</p>
               </a>
             </Link>
-            
+
           ))
-        } 
+        }
       </div>
     </main>
   )
 }
 
 
-export const getStaticProps: GetStaticProps = async() => {
+export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient()
 
   const response = await prismic.query<any>([
@@ -61,11 +61,11 @@ export const getStaticProps: GetStaticProps = async() => {
   })
 
 
-  return{
+  return {
     props: {
       posts
     },
     //revalidate: 60 * 60 // 1 hours
   }
-  
+
 }

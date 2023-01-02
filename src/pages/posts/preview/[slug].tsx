@@ -20,16 +20,17 @@ interface PostProps {
 export default function Post({ post }: PostProps) {
 
   const { data: session } = useSession()
+  console.log(session)
   const router = useRouter()
 
   useEffect(() => {
-    if(session?.activeSubscription) {
+    if (session?.activeSubscription) {
       router.push(`/posts/${post.slug}`)
     }
 
-  },[session, router, post.slug])
-  
-  return(
+  }, [session, router, post.slug])
+
+  return (
     <>
       <Head>
         <title>{post.title} | igNews</title>
@@ -39,8 +40,8 @@ export default function Post({ post }: PostProps) {
           <a key={post.slug}>
             <h1>{post.title}</h1>
             <time>{post.updateAt}</time>
-            <div 
-              dangerouslySetInnerHTML={{__html: post.content}}
+            <div
+              dangerouslySetInnerHTML={{ __html: post.content }}
               className={`${styles.postContent} ${styles.previewContent}`}
             />
           </a>
@@ -51,10 +52,10 @@ export default function Post({ post }: PostProps) {
           <Link href='/'>
             <a>Subscribe now 👍</a>
           </Link>
-        </div> 
+        </div>
       </main>
     </>
-    
+
   )
 }
 
@@ -70,7 +71,7 @@ export const getStaticPaths: GetStaticPaths = () => {
   }
 }
 
-export const getStaticProps: GetStaticProps = async({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 
   const { slug } = params
@@ -88,10 +89,10 @@ export const getStaticProps: GetStaticProps = async({ params }) => {
       month: 'long',
       year: 'numeric'
     })
-    
+
   }
 
-  return{
+  return {
     props: {
       post
     }

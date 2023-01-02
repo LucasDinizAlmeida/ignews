@@ -23,16 +23,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const userInDB = await fauna.query<userInDBProps>(
       q.Get(
         q.Match(
-          q.Index('user_by_userEmail'),
+          q.Index('user_by_email'),
           q.Casefold(session.user.email)
         )
       )
-    ) 
+    )
 
     let stripeCustomerId = userInDB.data.customerId
 
-  
-    if(!stripeCustomerId) {
+
+    if (!stripeCustomerId) {
 
       const stripeCustomer = await stripe.customers.create({
         email: session.user.email
@@ -43,15 +43,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       await fauna.query(
         q.Update(
           q.Ref(q.Collection('users'), userInDB.ref.id),
-          { data: { customerId: stripeCustomerId}}
+          { data: { customerId: stripeCustomerId } }
         )
       )
 
     }
-      
-      
 
-  
+
+
+
 
     const stripeCheckoutSession = await stripe.checkout.sessions.create({
       customer: stripeCustomerId,
@@ -66,11 +66,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       cancel_url: process.env.STRIPE_CANCEL_URL
     })
 
-    res.status(200).send({ sessionId: stripeCheckoutSession.id})
+    res.status(200).send({ sessionId: stripeCheckoutSession.id })
 
   } else {
     res.setHeader('Allow', 'Post')
     res.status(405).end('Method not allow')
   }
-  
+
 }

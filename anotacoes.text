@@ -1,0 +1,3 @@
+-> Duplicação na hora de fazer o signIn na colection users do DB; (RESOLVIDO)
+-> Não abre o CheckoutSession do stripe pra realizar a subscription; (RESOLVIDO)
+-> Aplicação não consegue consumir os dados do Prismic;

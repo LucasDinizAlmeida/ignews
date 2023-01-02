@@ -7,9 +7,9 @@ import { saveSubscription } from "./_lib/manegeSubscription";
 async function buffer(readable: Readable) {
   const chunks = []
 
-  for await(const chunk of readable) {
+  for await (const chunk of readable) {
     chunks.push(
-      typeof chunk === 'string' ? Buffer.from(chunk) : chunk 
+      typeof chunk === 'string' ? Buffer.from(chunk) : chunk
     )
   }
 
@@ -20,7 +20,7 @@ export const config = {
   api: {
     bodyParser: false
   }
-} 
+}
 
 const relevantEvents = new Set([
   'checkout.session.completed',
@@ -29,8 +29,8 @@ const relevantEvents = new Set([
 ])
 
 
-export default async(req: NextApiRequest, res: NextApiResponse) => {
-  if(req.method === 'POST') {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'POST') {
     const secret = req.headers['stripe-signature']
     const buf = await buffer(req)
 
@@ -43,11 +43,11 @@ export default async(req: NextApiRequest, res: NextApiResponse) => {
     } catch (error) {
       res.status(400).send(`WebHooks error: ${error.messange}`)
     }
-    
+
     const { type } = event
 
-    if(relevantEvents.has(type)) {
-      
+    if (relevantEvents.has(type)) {
+      console.log(type)
       try {
         switch (type) {
           case 'customer.subscription.update':
@@ -64,7 +64,7 @@ export default async(req: NextApiRequest, res: NextApiResponse) => {
             break;
 
           case 'checkout.session.completed':
-            
+
             const checkoutSession = event.data.object as Stripe.Checkout.Session
 
             await saveSubscription(
@@ -73,16 +73,16 @@ export default async(req: NextApiRequest, res: NextApiResponse) => {
               true
             )
             break;
-        
+
           default:
             throw new Error('Unhandled event.')
         }
       } catch (error) {
-        return res.json({ err: error.messange})
+        return res.json({ err: error.messange })
       }
-      
+
     }
-    
+
     res.json({ ok: true })
   } else {
     res.setHeader('Allow', 'POST')

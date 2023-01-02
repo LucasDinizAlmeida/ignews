@@ -15,7 +15,7 @@ export async function saveSubscription(
       'ref',
       q.Get(
         q.Match(
-          q.Index('user_by_stripe_customer_id'),
+          q.Index('by_stripe_customer_id'),
           customerId
         )
       )
@@ -28,15 +28,15 @@ export async function saveSubscription(
     idInStripe: subscription.id,
     userId: userRef,
     status: subscription.status,
-    priceId: subscription.items.data[0].price.id 
+    priceId: subscription.items.data[0].price.id
 
   }
 
-  if(isCreate) {
+  if (isCreate) {
     await fauna.query(
       q.Create(
-        q.Collection('Subscriptions_valid'),
-        { data: subscriptionData}
+        q.Collection('subscriptions'),
+        { data: { subscriptionData } }
       )
     )
   } else {
@@ -51,7 +51,7 @@ export async function saveSubscription(
             )
           )
         ),
-        { data: subscriptionData}
+        { data: subscriptionData }
       )
     )
   }

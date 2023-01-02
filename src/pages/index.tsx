@@ -7,7 +7,7 @@ import styles from './home.module.scss'
 interface HomeProps {
   product: {
     priceId: string,
-    amount: number
+    amount: string
   }
 }
 
@@ -23,23 +23,23 @@ export default function Home(props: HomeProps) {
         <section className={styles.hero}>
           <span>👏 Hey, welcome</span>
           <h1>
-            News about <br /> 
+            News about <br />
             the <span>React</span> world.
           </h1>
           <p>
             Get acess to all the publications <br />
             <span>for {props.product.amount} mounth</span>
           </p>
-          <SubscribeButton priceId={props.product.priceId}/>
+          <SubscribeButton />
         </section>
         <img src='/aqui/images/avatar.svg' alt="girl coding" />
       </main>
     </>
-    
+
   )
 }
 
-export const getStaticProps: GetStaticProps = async() => {
+export const getStaticProps: GetStaticProps = async () => {
 
   const price = await stripe.prices.retrieve('price_1KTvkBDmC9ndlLrzcufnHVKS', {
     expand: ['product']
@@ -50,7 +50,7 @@ export const getStaticProps: GetStaticProps = async() => {
     amount: new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD'
-    }).format(price.unit_amount/ 100)
+    }).format(price.unit_amount / 100)
   }
 
   return {
