@@ -44,7 +44,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(400).send(`WebHooks error: ${error.messange}`)
     }
 
-    const type = event.type
+    const { type } = event
 
     if (relevantEvents.has(type)) {
       console.log(type)
